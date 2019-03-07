@@ -93,20 +93,32 @@ class Database extends SQLiteOpenHelper {
 
 
     public Cursor getCatagoryList() {
-        SQLiteDatabase db = super.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("select * from catagory", null);
         return c;
     }
 
-    public Cursor getMessage(int id) {
+    public Cursor getAllMessage(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery("select * from message where id = "+id, null);
         return c;
     }
 
+    public Cursor getSingleMessage(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from message where track_id = "+id, null);
+        return c;
+    }
+
     public Cursor getFavouriteList(){
 //        here true means 1 and false = 0
-        return this.getReadableDatabase().rawQuery("select * from message where favourite=1",null);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from message where favourite=1",null);
+        return c;
+    }
+
+    public void updateFavouriteList(String track_id,String fav){
+        getWritableDatabase().execSQL(String.format("update message set favourite = %s where track_id = %s",fav,track_id));
     }
 
     public Cursor runCustomQuery(String query) {

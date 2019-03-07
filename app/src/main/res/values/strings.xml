@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Message Helper</string>
+    <string name="title_activity_test">test</string>
 </resources>
