@@ -23,10 +23,14 @@ public class MessageActivity extends AppCompatActivity {
 
     Cursor c;
     static int id;
+
     ArrayList<String> messageData = new ArrayList<String>();
     static ArrayList<Helper> messageList = new ArrayList<>();
 
     ListView listView;
+    ImageButton fav_show;
+    String catergory;
+    int categoryID;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -37,9 +41,23 @@ public class MessageActivity extends AppCompatActivity {
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        fav_show = (ImageButton) findViewById(R.id.favShow);
+        fav_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(MessageActivity.this, MessageActivity.class);
+                    intent.putExtra("key", -5);
+                    startActivity(intent);
+                } finally {
+                    finish();
+                }
+            }
+        });
+
 //        get data from main activity
         Intent intent = getIntent();
-        id = intent.getIntExtra("key",-1);
+        id = intent.getIntExtra("key", -1);
 
 //        adding custom action bar
         addActionBar();
@@ -55,7 +73,10 @@ public class MessageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView textView = (TextView) findViewById(R.id.catagory);
-        textView.setText(MainActivity.catagoryData.get(id-1));
+        if (id == -5)
+            textView.setText("Favourite List");
+        else
+            textView.setText(MainActivity.catagoryData.get(id - 1));
 
         ImageButton backButton = (ImageButton) findViewById(R.id.back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -73,27 +94,31 @@ public class MessageActivity extends AppCompatActivity {
 
     private void getMessages(int id) {
 
-        messageList.clear();
-
-        if(id == -1){
-            return;
-        }
-
         Database db = MainActivity.db;
         int track_id, fav;
         String body;
 
-        c = db.getAllMessage(id);
+        messageList.clear();
+
+        if (id == -1) {
+            return;
+        }
+
+        if (id == -5)
+            c = db.getFavouriteList();
+        else
+            c = db.getAllMessage(id);
 
 
-        if(c.getCount()>0){
+        if (c.getCount() > 0) {
             c.moveToFirst();
             do {
+                categoryID = c.getInt(c.getColumnIndex("id"));
                 body = c.getString(c.getColumnIndex("body"));
                 track_id = c.getInt(c.getColumnIndex("track_id"));
                 fav = c.getInt(c.getColumnIndex("favourite"));
 
-                messageList.add(new Helper(track_id,body,fav));
+                messageList.add(new Helper(categoryID,track_id, body, fav));
 
             } while (c.moveToNext());
         }
@@ -112,19 +137,19 @@ public class MessageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                make new intent with whole message
 
-//                adding track_id, message_body, favourite, catagory name, message_number, total number, position in this array
+//                adding track_id, message_body, favourite, category name, message_number, total number, position in this array
                 messageData.clear();
                 messageData.add(String.valueOf(messageList.get(position).track_id));
                 messageData.add(messageList.get(position).message_body);
                 messageData.add(String.valueOf(messageList.get(position).favourite));
-                messageData.add(MainActivity.catagoryData.get(MessageActivity.id - 1));
-                messageData.add(String.valueOf(position+1));
+                messageData.add(String.valueOf(messageList.get(position).categoryID));
+                messageData.add(String.valueOf(position + 1));
                 messageData.add(String.valueOf(messageList.size()));
                 messageData.add(String.valueOf(position));
 
-                Intent intent = new Intent(MessageActivity.this,MessageDetails.class);
+                Intent intent = new Intent(MessageActivity.this, MessageDetails.class);
 //                intent.putExtra("id",(int)(id+1));
-                intent.putStringArrayListExtra("messageData",messageData);
+                intent.putStringArrayListExtra("messageData", messageData);
                 startActivity(intent);
 
             }
@@ -132,12 +157,14 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
-     class Helper {
+    class Helper {
+        int categoryID;
         int track_id;
         String message_body;
         int favourite;
 
-        Helper(int track_id, String message_body, int favourite){
+        Helper(int cat,int track_id, String message_body, int favourite) {
+            this.categoryID = cat;
             this.track_id = track_id;
             this.favourite = favourite;
             this.message_body = message_body;
@@ -165,7 +192,7 @@ public class MessageActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate(R.layout.message_list,null);
+            View view = getLayoutInflater().inflate(R.layout.message_list, null);
             message = (TextView) view.findViewById(R.id.messages);
             message.setText(messageList.get(position).message_body);
             return view;

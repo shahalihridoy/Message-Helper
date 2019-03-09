@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="copy_icon" />
-                            <entry key="sourceFile" value="C:\Users\shahali" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="fav_list_2" />
+                            <entry key="sourceFile" value="C:\Users\shahali\Downloads\noun_wish list_101501_000000.svg" />
                           </map>
                         </option>
                       </PersistentState>

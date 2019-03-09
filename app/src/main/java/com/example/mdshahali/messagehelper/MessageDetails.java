@@ -3,7 +3,6 @@ package com.example.mdshahali.messagehelper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +18,11 @@ public class MessageDetails extends AppCompatActivity {
     String track_id;
     String favourite;
     String messageNumber;
-    String catagory;
+    String category;
     String position_in_array;
+
+    Database db;
+    Cursor c;
 
     ArrayList<String> messageData;
 
@@ -36,17 +38,23 @@ public class MessageDetails extends AppCompatActivity {
         favourite = messageData.get(2);
         message = messageData.get(1);
         messageNumber = String.format("%s of %s",messageData.get(4),messageData.get(5));
-        catagory = messageData.get(3);
+        category = messageData.get(3);
         position_in_array = messageData.get(6);
+
+//        load data to view
+        loadData();
 
 //        add custom action bar
         addActionBar();
-//        load data to view
-        loadData();
     }
 
 
     private void loadData() {
+
+        db = MainActivity.db;
+        c = db.runCustomQuery("select * from catagory where id = "+ category);
+        c.moveToFirst();
+        category = c.getString(c.getColumnIndex("catagory"));
 
         TextView message_body = (TextView) findViewById(R.id.detailMessage);
         message_body.setText(message);
@@ -64,7 +72,7 @@ public class MessageDetails extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView catagoryView = (TextView) findViewById(R.id.catagory);
-        catagoryView.setText(catagory);
+        catagoryView.setText(category);
 
         ImageButton backButton = (ImageButton) findViewById(R.id.back);
         final ImageButton favButton = (ImageButton) findViewById(R.id.favourite);

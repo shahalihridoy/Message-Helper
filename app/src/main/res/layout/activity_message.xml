@@ -42,9 +42,15 @@
                 android:text="Message Category"
                 android:textColor="@color/colorToolBarIcon" />
 
-            <Space
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"/>
+            <ImageButton
+                android:layout_marginRight="15dp"
+                android:background="@color/colorPrimary"
+                android:id="@+id/favShow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:tint="@color/colorToolBarIcon"
+                app:srcCompat="@drawable/fav_list_2" />
+
 
 
         </LinearLayout>

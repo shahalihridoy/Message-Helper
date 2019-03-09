@@ -22,9 +22,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/app_name"
                 android:textColor="@color/white" />
+
+            <ImageButton
+                android:layout_marginRight="15dp"
+                android:background="@color/colorPrimary"
+                android:id="@+id/favShow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:tint="@color/colorToolBarIcon"
+                app:srcCompat="@drawable/fav_list_2" />
+
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 

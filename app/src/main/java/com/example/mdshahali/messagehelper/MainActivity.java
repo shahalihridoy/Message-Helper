@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> catagoryData = new ArrayList<String>();
     static Database db; //static is for accessing from other class without creating object again
 
+    ImageButton fav_show;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,16 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fav_show = (ImageButton) findViewById(R.id.favShow);
+        fav_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MessageActivity.class);
+                intent.putExtra("key",-5);
+                startActivity(intent);
+            }
+        });
 
         showCatagoryList();
     }
